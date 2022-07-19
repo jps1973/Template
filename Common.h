@@ -6,6 +6,8 @@
 
 #define STRING_LENGTH															2048
 
+#define WINDOW_BORDER_WIDTH														GetSystemMetrics( SM_CXBORDER )
+#define WINDOW_BORDER_HEIGHT													GetSystemMetrics( SM_CYBORDER )
 
 #define ASCII_BACK_SLASH_CHARACTER												'\\'
 #define ASCII_FULL_STOP_CHARACTER												'.'
