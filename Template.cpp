@@ -34,6 +34,104 @@ LRESULT CALLBACK MainWndProc( HWND hWndMain, UINT uMessage, WPARAM wParam, LPARA
 	// Select message
 	switch( uMessage )
 	{
+		case WM_CREATE:
+		{
+			// A create message
+
+			// Call default procedure
+			lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+
+			// Break out of switch
+			break;
+
+		} // End of a create message
+		case WM_SIZE:
+		{
+			// A size message
+
+			// Call default procedure
+			lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+
+			// Break out of switch
+			break;
+
+		} // End of a size message
+		case WM_ACTIVATE:
+		{
+			// An activate message
+
+			// Call default procedure
+			lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+
+			// Break out of switch
+			break;
+
+		} // End of an activate message
+		case WM_GETMINMAXINFO:
+		{
+			// A get min max info message
+			MINMAXINFO FAR *lpMinMaxInfo;
+
+			// Get min max info structure
+			lpMinMaxInfo = ( MINMAXINFO FAR * )lParam;
+
+			// Update min max info structure
+			lpMinMaxInfo->ptMinTrackSize.x = MAIN_WINDOW_MINIMUM_WIDTH;
+			lpMinMaxInfo->ptMinTrackSize.y = MAIN_WINDOW_MINIMUM_HEIGHT;
+
+			// Break out of switch
+			break;
+
+		} // End of a get min max info message
+		case WM_DROPFILES:
+		{
+			// A drop files message
+			UINT uFileCount;
+			HDROP hDrop;
+			UINT uWhichFile;
+			UINT uFileSize;
+
+			// Allocate string memory
+			LPTSTR lpszFilePath = new char[ STRING_LENGTH ];
+
+			// Get drop handle
+			hDrop = ( HDROP )wParam;
+
+			// Count dropped files
+			uFileCount = DragQueryFile( hDrop, ( UINT )-1, NULL, 0 );
+
+			// Loop through dropped files
+			for( uWhichFile = 0; uWhichFile < uFileCount; uWhichFile ++ )
+			{
+				// Get size of dropped file
+				uFileSize = DragQueryFile( hDrop, uWhichFile, NULL, 0 );
+
+				// Ensure that file size is valid
+				if( uFileSize != 0 )
+				{
+					// File size is valid
+
+					// Get file path
+					if( DragQueryFile( hDrop, uWhichFile, lpszFilePath, ( uFileSize + sizeof( char ) ) ) )
+					{
+						// Successfully got file path
+
+						// Display file path
+						MessageBox( hWndMain, lpszFilePath, INFORMATION_MESSAGE_CAPTION, ( MB_OK | MB_ICONINFORMATION ) );
+
+					} // End of successfully got file path
+
+				} // End of file size is valid
+
+			}; // End of loop through dropped files
+
+			// Free string memory
+			delete [] lpszFilePath;
+
+			// Break out of switch
+			break;
+
+		} // End of a drop files message
 		case WM_COMMAND:
 		{
 			// A command message
@@ -209,6 +307,57 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 		if( hWndMain )
 		{
 			// Successfully created main window
+			HMENU hMenuSystem;
+			LPWSTR *lpszArgumentList;
+			int nArgumentCount;
+
+			// Get system menu
+			hMenuSystem = GetSystemMenu( hWndMain, FALSE );
+
+			// Add separator to system menu
+			InsertMenu( hMenuSystem, SYSTEM_MENU_SEPARATOR_ITEM_POSITION, ( MF_BYPOSITION | MF_SEPARATOR ), 0, NULL );
+
+			// Add about item to system menu
+			InsertMenu( hMenuSystem, SYSTEM_MENU_ABOUT_ITEM_POSITION, MF_BYPOSITION, IDM_HELP_ABOUT, SYSTEM_MENU_ABOUT_ITEM_TEXT );
+
+			// Get argument list
+			lpszArgumentList = CommandLineToArgvW( GetCommandLineW(), &nArgumentCount );
+
+			// Ensure that argument list was got
+			if( lpszArgumentList )
+			{
+				// Successfully got argument list
+				int nWhichArgument;
+				int nSizeNeeded;
+				int nWideArgumentLength;
+
+				// Allocate string memory
+				LPTSTR lpszArgument = new char[ STRING_LENGTH ];
+
+				// Loop through arguments
+				for( nWhichArgument = 1; nWhichArgument < nArgumentCount; nWhichArgument ++ )
+				{
+					// Get wide argument length
+					nWideArgumentLength = lstrlenW( lpszArgumentList[ nWhichArgument ] );
+
+					// Get size required for argument
+					nSizeNeeded = WideCharToMultiByte( CP_UTF8, 0, lpszArgumentList[ nWhichArgument ], nWideArgumentLength, NULL, 0, NULL, NULL );
+
+					// Convert argument to ansi
+					WideCharToMultiByte( CP_UTF8, 0, lpszArgumentList[ nWhichArgument ], nWideArgumentLength, lpszArgument, nSizeNeeded, NULL, NULL );
+
+					// Terminate argument
+					lpszArgument[ nSizeNeeded ] = ( char )NULL;
+
+					// Display argument
+					MessageBox( hWndMain, lpszArgument, INFORMATION_MESSAGE_CAPTION, ( MB_OK | MB_ICONINFORMATION ) );
+
+				}; // End of loop through arguments
+
+				// Free string memory
+				delete [] lpszArgument;
+
+			} // End of successfully got argument list
 
 			// Show main window
 			ShowWindow( hWndMain, nCmdShow );
