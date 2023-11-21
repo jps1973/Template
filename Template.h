@@ -1,0 +1,24 @@
+// Template.h
+
+#pragma once
+
+#include "Common.h"
+
+#define MAIN_WINDOW_CLASS_NAME													"Main Template Window Class"
+
+#define MAIN_WINDOW_CLASS_STYLE													0
+#define MAIN_WINDOW_CLASS_ICON													LoadIcon( NULL, IDI_APPLICATION )
+#define MAIN_WINDOW_CLASS_CURSOR												LoadCursor( NULL, IDC_ARROW )
+#define MAIN_WINDOW_CLASS_BACKGROUND											( HBRUSH )( COLOR_APPWORKSPACE + 1 )
+#define MAIN_WINDOW_CLASS_MENU_NAME												NULL
+#define MAIN_WINDOW_CLASS_ICON_SMALL											LoadIcon( NULL, IDI_APPLICATION )
+
+#define MAIN_WINDOW_EXTENDED_STYLE												( WS_EX_WINDOWEDGE | WS_EX_ACCEPTFILES )
+#define MAIN_WINDOW_STYLE														WS_OVERLAPPEDWINDOW
+#define MAIN_WINDOW_TEXT														"Template"
+
+#define MAIN_WINDOW_MINIMUM_WIDTH												320
+#define MAIN_WINDOW_MINIMUM_HEIGHT												200
+
+#define UNABLE_TO_REGISTER_WINDOW_CLASS_ERROR_MESSAGE							"Unable to Register Window Class"
+#define UNABLE_TO_CREATE_WINDOW_ERROR_MESSAGE									"Unable to Create Window"
