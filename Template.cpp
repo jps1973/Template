@@ -2,6 +2,31 @@
 
 #include "Template.h"
 
+int ShowAboutMessage( HWND hWndParent )
+{
+	int nResult = 0;
+
+	MSGBOXPARAMS mbp;
+
+	// Clear message box parameter structure
+	ZeroMemory( &mbp, sizeof( mbp ) );
+
+	// Initialise message box parameter structure
+	mbp.cbSize		= sizeof( MSGBOXPARAMS );
+	mbp.hwndOwner	= hWndParent;
+	mbp.hInstance	= NULL;
+	mbp.lpszText	= ABOUT_MESSAGE_TEXT;
+	mbp.lpszCaption	= ABOUT_MESSAGE_CAPTION;
+	mbp.dwStyle		= ( MB_OK | MB_USERICON );
+	mbp.lpszIcon	= MAIN_WINDOW_CLASS_ICON_NAME;
+
+	// Show message box
+	nResult = MessageBoxIndirect( &mbp );
+
+	return nResult;
+
+} // End of function ShowAboutMessage
+
 LRESULT CALLBACK MainWndProc( HWND hWndMain, UINT uMessage, WPARAM wParam, LPARAM lParam )
 {
 	LRESULT lr = 0;
@@ -9,6 +34,104 @@ LRESULT CALLBACK MainWndProc( HWND hWndMain, UINT uMessage, WPARAM wParam, LPARA
 	// Select message
 	switch( uMessage )
 	{
+		case WM_COMMAND:
+		{
+			// A command message
+
+			// Select command
+			switch( LOWORD( wParam ) )
+			{
+				case IDM_FILE_EXIT:
+				{
+					// A file exit command
+
+					// Destroy window
+					DestroyWindow( hWndMain );
+
+					// Break out of switch
+					break;
+
+				} // End of a file exit command
+				case IDM_HELP_ABOUT:
+				{
+					// A help about command
+
+					// Show about message
+					ShowAboutMessage( hWndMain );
+
+					// Break out of switch
+					break;
+
+				} // End of a help about command
+				default:
+				{
+					// Default command
+
+					// Call default procedure
+					lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+
+					// Break out of switch
+					break;
+
+				} // End of default command
+
+			}; // End of selection for command
+
+			// Break out of switch
+			break;
+
+		} // End of a command message
+		case WM_SYSCOMMAND:
+		{
+			// A system command message
+
+			// Select system command
+			switch( LOWORD( wParam ) )
+			{
+				case IDM_HELP_ABOUT:
+				{
+					// A help about system command
+
+					// Show about message
+					ShowAboutMessage( hWndMain );
+
+					// Break out of switch
+					break;
+
+				} // End of a help about system command
+				default:
+				{
+					// Default system command
+
+					// Call default procedure
+					lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+
+					// Break out of switch
+					break;
+
+				} // End of default system command
+
+			}; // End of selection for system command
+
+			// Break out of switch
+			break;
+
+		} // End of a system command message
+		case WM_CONTEXTMENU:
+		{
+			// A context menu message
+			HMENU hMenuContext;
+
+			// Load context menu
+			hMenuContext = LoadMenu( NULL, MAKEINTRESOURCE( IDR_CONTEXT_MENU ) );
+
+			// Show context menu
+			TrackPopupMenu( GetSubMenu( hMenuContext, 0 ), ( TPM_LEFTALIGN | TPM_LEFTBUTTON ), LOWORD( lParam ), HIWORD( lParam ), 0, hWndMain, NULL );
+
+			// Break out of switch
+			break;
+
+		} // End of a context menu message
 		case WM_CLOSE:
 		{
 			// A close message
@@ -71,7 +194,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 	wcMain.hCursor			= MAIN_WINDOW_CLASS_CURSOR;
 	wcMain.hbrBackground	= MAIN_WINDOW_CLASS_BACKGROUND;
 	wcMain.lpszMenuName		= MAIN_WINDOW_CLASS_MENU_NAME;
-	wcMain.hIconSm			= MAIN_WINDOW_CLASS_ICON_SMALL;
+	wcMain.hIconSm			= MAIN_WINDOW_CLASS_ICON;
 
 	// Register main window class
 	if( RegisterClassEx( &wcMain ) )
@@ -110,7 +233,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 			// Unable to create main window
 
 			// Display error message
-			MessageBox( NULL, UNABLE_TO_CREATE_WINDOW_ERROR_MESSAGE, ERROR_MESSAGE_CAPTION, ( MB_OK | MB_ICONERROR ) );
+			MessageBox( NULL, UNABLE_TO_CREATE_MAIN_WINDOW_ERROR_MESSAGE, ERROR_MESSAGE_CAPTION, ( MB_OK | MB_ICONERROR ) );
 
 		} // End of unable to create main window
 
@@ -120,7 +243,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 		// Unable to register main window class
 
 		// Display error message
-		MessageBox( NULL, UNABLE_TO_REGISTER_WINDOW_CLASS_ERROR_MESSAGE, ERROR_MESSAGE_CAPTION, ( MB_OK | MB_ICONERROR ) );
+		MessageBox( NULL, UNABLE_TO_REGISTER_MAIN_WINDOW_CLASS_ERROR_MESSAGE, ERROR_MESSAGE_CAPTION, ( MB_OK | MB_ICONERROR ) );
 
 	} // End of unable to register main window class
 
