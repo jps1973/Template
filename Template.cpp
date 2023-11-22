@@ -37,9 +37,27 @@ LRESULT CALLBACK MainWndProc( HWND hWndMain, UINT uMessage, WPARAM wParam, LPARA
 		case WM_CREATE:
 		{
 			// A create message
+			HINSTANCE hInstance;
+			HFONT hFont;
 
-			// Call default procedure
-			lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+			// Get instance
+			hInstance = ( ( LPCREATESTRUCT )lParam )->hInstance;
+
+			// Get font
+			hFont = ( HFONT )GetStockObject( DEFAULT_GUI_FONT );
+
+			// Create status bar window
+			if( StatusBarWindowCreate( hWndMain, hInstance ) )
+			{
+				// Successfully created status bar window
+
+				// Set status bar window font
+				StatusBarWindowSetFont( hFont );
+
+				// Set status bar window text
+				StatusBarWindowSetText( "Hello" );
+
+			} // End of successfully created status bar window
 
 			// Break out of switch
 			break;
@@ -49,8 +67,8 @@ LRESULT CALLBACK MainWndProc( HWND hWndMain, UINT uMessage, WPARAM wParam, LPARA
 		{
 			// A size message
 
-			// Call default procedure
-			lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+			// Size status bar window
+			StatusBarWindowSize();
 
 			// Break out of switch
 			break;
