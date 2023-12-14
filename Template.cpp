@@ -2,6 +2,20 @@
 
 #include "Template.h"
 
+void DoubleClickFunction( LPCTSTR lpszItemText )
+{
+	// Display item text
+	MessageBox( NULL, lpszItemText, INFORMATION_MESSAGE_CAPTION, ( MB_OK | MB_ICONINFORMATION ) );
+
+} // End of function DoubleClickFunction
+
+void SelectionChangedFunction( LPCTSTR lpszItemText )
+{
+	// Show item text on status bar window
+	StatusBarWindowSetText( lpszItemText );
+
+} // End of function SelectionChangedFunction
+
 int ShowAboutMessage( HWND hWndParent )
 {
 	int nResult = 0;
@@ -217,78 +231,15 @@ LRESULT CALLBACK MainWndProc( HWND hWndMain, UINT uMessage, WPARAM wParam, LPARA
 					{
 						// Command message is from list box window
 
-						// Select list box window notification code
-						switch( HIWORD( wParam ) )
+						// Handle command message from list box window
+						if( !( ListBoxWindowHandleCommandMessage( wParam, lParam, &DoubleClickFunction, &SelectionChangedFunction ) ) )
 						{
-							case LBN_DBLCLK:
-							{
-								// A list box window double click notification code
-								int nSelectedItem;
+							// Command message was not handled from list box window
 
-								// Allocate string memory
-								LPTSTR lpszSelected = new char[ STRING_LENGTH ];
+							// Call default procedure
+							lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
 
-								// Get selected item
-								nSelectedItem = ListBoxWindowGetCurrentSelection();
-
-								// Get selected item text
-								if( ListBoxWindowGetItemText( nSelectedItem, lpszSelected ) )
-								{
-									// Successfully got selected item text
-
-									// Display selected item text
-									MessageBox( hWndMain, lpszSelected, INFORMATION_MESSAGE_CAPTION, ( MB_OK | MB_ICONINFORMATION ) );
-
-								} // End of successfully got selected item text
-
-								// Free string memory
-								delete [] lpszSelected;
-
-								// Break out of switch
-								break;
-
-							} // End of a list box window double click notification code
-							case LBN_SELCHANGE:
-							{
-								// A list box window selection change notification code
-								int nSelectedItem;
-
-								// Allocate string memory
-								LPTSTR lpszSelected = new char[ STRING_LENGTH ];
-
-								// Get selected item
-								nSelectedItem = ListBoxWindowGetCurrentSelection();
-
-								// Get selected item text
-								if( ListBoxWindowGetItemText( nSelectedItem, lpszSelected ) )
-								{
-									// Successfully got selected item text
-
-									// Show selected item text on status bar window
-									StatusBarWindowSetText( lpszSelected );
-
-								} // End of successfully got selected item text
-
-								// Free string memory
-								delete [] lpszSelected;
-
-								// Break out of switch
-								break;
-
-							} // End of a list box window selection change notification code
-							default:
-							{
-								// Default list box window notification code
-
-								// Call default procedure
-								lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
-
-								// Break out of switch
-								break;
-
-							} // End of default list box window notification code
-
-						}; // End of selection for list box window notification code
+						} // End of command message was not handled from list box window
 
 					} // End of command message is from list box window
 					else
@@ -481,8 +432,8 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 					// Terminate argument
 					lpszArgument[ nSizeNeeded ] = ( char )NULL;
 
-					// Display argument
-					MessageBox( hWndMain, lpszArgument, INFORMATION_MESSAGE_CAPTION, ( MB_OK | MB_ICONINFORMATION ) );
+					// Add argument to list box window
+					ListBoxWindowAddString( lpszArgument );
 
 				}; // End of loop through arguments
 

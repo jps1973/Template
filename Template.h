@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "Ascii.h"
 #include "Common.h"
 #include "Resource.h"
 

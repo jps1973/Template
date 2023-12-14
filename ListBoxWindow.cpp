@@ -60,6 +60,82 @@ BOOL ListBoxWindowGetRect( LPRECT lpRect )
 
 } // End of function ListBoxWindowGetRect
 
+BOOL ListBoxWindowHandleCommandMessage( WPARAM wParam, LPARAM, void( *lpDoubleClickFunction )( LPCTSTR lpszItemText ), void( *lpSelectionChangedFunction )( LPCTSTR lpszItemText ) )
+{
+	BOOL bResult = FALSE;
+
+	// Select list box window notification code
+	switch( HIWORD( wParam ) )
+	{
+		case LBN_DBLCLK:
+		{
+			// A list box window double click notification code
+			int nSelectedItem;
+
+			// Allocate string memory
+			LPTSTR lpszSelectedItemText = new char[ STRING_LENGTH ];
+
+			// Get selected item
+			nSelectedItem = ListBoxWindowGetCurrentSelection();
+
+			// Get selected item text
+			if( ListBoxWindowGetItemText( nSelectedItem, lpszSelectedItemText ) )
+			{
+				// Successfully got selected item text
+
+				// Call double click function
+				( *lpDoubleClickFunction )( lpszSelectedItemText );
+
+				// Update return value
+				bResult = TRUE;
+
+			} // End of successfully got selected item text
+
+			// Free string memory
+			delete [] lpszSelectedItemText;
+
+			// Break out of switch
+			break;
+
+		} // End of a list box window double click notification code
+		case LBN_SELCHANGE:
+		{
+			// A list box window selection change notification code
+			int nSelectedItem;
+
+			// Allocate string memory
+			LPTSTR lpszSelectedItemText = new char[ STRING_LENGTH ];
+
+			// Get selected item
+			nSelectedItem = ListBoxWindowGetCurrentSelection();
+
+			// Get selected item text
+			if( ListBoxWindowGetItemText( nSelectedItem, lpszSelectedItemText ) )
+			{
+				// Successfully got selected item text
+
+				// Call selection changed function
+				( *lpSelectionChangedFunction )( lpszSelectedItemText );
+
+				// Update return value
+				bResult = TRUE;
+
+			} // End of successfully got selected item text
+
+			// Free string memory
+			delete [] lpszSelectedItemText;
+
+			// Break out of switch
+			break;
+
+		} // End of a list box window selection change notification code
+
+	}; // End of selection for list box window notification code
+
+	return bResult;
+
+} // End of function ListBoxWindowHandleCommandMessage
+
 BOOL ListBoxWindowMove( int nX, int nY, int nWidth, int nHeight, BOOL bRepaint )
 {
 	// Move list box window

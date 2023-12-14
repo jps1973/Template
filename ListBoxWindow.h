@@ -5,6 +5,7 @@
 #include <windows.h>
 #include <commctrl.h>
 
+#include "Ascii.h"
 #include "Common.h"
 
 #define LIST_BOX_WINDOW_CLASS_NAME												WC_LISTBOX
@@ -24,6 +25,8 @@ int ListBoxWindowGetCurrentSelection();
 int ListBoxWindowGetItemText( int nWhichItem, LPTSTR lpszItemText );
 
 BOOL ListBoxWindowGetRect( LPRECT lpRect );
+
+BOOL ListBoxWindowHandleCommandMessage( WPARAM wParam, LPARAM lParam, void( *lpDoubleClickFunction )( LPCTSTR lpszItemText ), void( *lpSelectionChangedFunction )( LPCTSTR lpszItemText ) );
 
 BOOL ListBoxWindowMove( int nX, int nY, int nWidth, int nHeight, BOOL bRepaint = TRUE );
 
