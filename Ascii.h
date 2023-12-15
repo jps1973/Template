@@ -2,8 +2,6 @@
  
 #pragma once
 
-#define MAIN_WINDOW_CLASS_NAME													"Main Template Window Class"
-
 #define ASCII_AMPERSAND_CHARACTER												'&'
 #define ASCII_APOSTROPHE_CHARACTER												'\''
 #define ASCII_AT_CHARACTER														'@'
