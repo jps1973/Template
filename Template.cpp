@@ -2,6 +2,20 @@
 
 #include "Template.h"
 
+void ListBoxWindowDoubleClickFunction( LPCTSTR lpszItemText )
+{
+	// Display item text
+	MessageBox( NULL, lpszItemText, INFORMATION_MESSAGE_CAPTION, ( MB_OK | MB_ICONINFORMATION ) );
+
+} // End of function ListBoxWindowDoubleClickFunction
+
+void ListBoxWindowSelectionChangedFunction( LPCTSTR lpszItemText )
+{
+	// Show item text on status bar window
+	StatusBarWindowSetText( lpszItemText );
+
+} // End of function ListBoxWindowSelectionChangedFunction
+
 int ShowAboutMessage( HWND hWndParent )
 {
 	int nResult = 0;
@@ -42,22 +56,29 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 			// Get instance
 			hInstance = GetModuleHandle( NULL );
 
-			// Create status bar window
-			if( StatusBarWindowCreate( hWndMain, hInstance ) )
+			// Create list box window
+			if( ListBoxWindowCreate( hWndMain, hInstance ) )
 			{
-				// Successfully created status bar window
+				// Successfully created list box window
 				HFONT hFont;
 
 				// Get font
 				hFont = ( HFONT )GetStockObject( DEFAULT_GUI_FONT );
 
-				// Set status bar window font
-				StatusBarWindowSetFont( hFont );
+				// Set list box window font
+				ListBoxWindowSetFont( hFont );
 
-				// Set status bar window text
-				StatusBarWindowSetText( "Hello" );
+				// Create status bar window
+				if( StatusBarWindowCreate( hWndMain, hInstance ) )
+				{
+					// Successfully created status bar window
 
-			} // End of successfully created status bar window
+					// Set status bar window font
+					StatusBarWindowSetFont( hFont );
+
+				} // End of successfully created status bar window
+
+			} // End of successfully created list box window
 
 			// Break out of switch
 			break;
@@ -66,9 +87,28 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 		case WM_SIZE:
 		{
 			// A size message
+			int nClientWidth;
+			int nClientHeight;
+			RECT rcStatusBar;
+			int nStatusBarWindowHeight;
+			int nListBoxWindowHeight;
+
+			// Get client size
+			nClientWidth	= LOWORD( lParam );
+			nClientHeight	= HIWORD( lParam );
 
 			// Size status bar window
 			StatusBarWindowSize();
+
+			// Get status bar window size
+			StatusBarWindowGetRect( &rcStatusBar );
+
+			// Calculate window sizes
+			nStatusBarWindowHeight	= ( rcStatusBar.bottom - rcStatusBar.top );
+			nListBoxWindowHeight	= ( nClientHeight - nStatusBarWindowHeight );
+
+			// Move control windows
+			ListBoxWindowMove( 0, 0, nClientWidth, nListBoxWindowHeight, TRUE );
 
 			// Break out of switch
 			break;
@@ -77,6 +117,9 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 		case WM_ACTIVATE:
 		{
 			// An activate message
+
+			// Focus on list box window
+			ListBoxWindowSetFocus();
 
 			// Break out of switch
 			break;
@@ -128,8 +171,30 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 				{
 					// Default command
 
-					// Call default procedure
-					lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+					// See if command is from list box window
+					if( IsListBoxWindow( ( HWND )lParam ) )
+					{
+						// Command is from list box window
+
+						// Handle command from list box window
+						if( !( ListBoxWindowHandleCommandMessage( wParam, lParam, &ListBoxWindowDoubleClickFunction, &ListBoxWindowSelectionChangedFunction ) ) )
+						{
+							// Command was not handled from list box window
+
+							// Call default procedure
+							lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+
+						} // End of command was not handled from list box window
+
+					} // End of command is from list box window
+					else
+					{
+						// Command is not from list box window
+
+						// Call default procedure
+						lr = DefWindowProc( hWndMain, uMessage, wParam, lParam );
+
+					} // End of command is not from list box window
 
 					// Break out of switch
 					break;
@@ -286,6 +351,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,  LPSTR, int nCmdShow )
 
 			// Update main window
 			UpdateWindow( hWndMain );
+
+			// Add strings to list box window
+			ListBoxWindowAddString( "1234567890" );
+			ListBoxWindowAddString( "qwertyuiop" );
+			ListBoxWindowAddString( "asdfghjkl" );
+			ListBoxWindowAddString( "zxcvbnm" );
 
 			// Main message loop
 			while( GetMessage( &msg, NULL, 0, 0 ) > 0 )
