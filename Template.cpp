@@ -34,6 +34,54 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMessage, WPARAM wPara
 	// Select message
 	switch( uMessage )
 	{
+		case WM_CREATE:
+		{
+			// A create message
+			HINSTANCE hInstance;
+
+			// Get instance
+			hInstance = GetModuleHandle( NULL );
+
+			// Create status bar window
+			if( StatusBarWindowCreate( hWndMain, hInstance ) )
+			{
+				// Successfully created status bar window
+				HFONT hFont;
+
+				// Get font
+				hFont = ( HFONT )GetStockObject( DEFAULT_GUI_FONT );
+
+				// Set status bar window font
+				StatusBarWindowSetFont( hFont );
+
+				// Set status bar window text
+				StatusBarWindowSetText( "Hello" );
+
+			} // End of successfully created status bar window
+
+			// Break out of switch
+			break;
+
+		} // End of a create message
+		case WM_SIZE:
+		{
+			// A size message
+
+			// Size status bar window
+			StatusBarWindowSize();
+
+			// Break out of switch
+			break;
+
+		} // End of a size message
+		case WM_ACTIVATE:
+		{
+			// An activate message
+
+			// Break out of switch
+			break;
+
+		} // End of an activate message
 		case WM_GETMINMAXINFO:
 		{
 			// A get min max info message
