@@ -3,7 +3,7 @@
 #include "StatusBarWindow.h"
 
 // Global variables
-HWND g_hWndStatusBar;
+static HWND g_hWndStatusBar;
 
 BOOL IsStatusBarWindow( HWND hWnd )
 {

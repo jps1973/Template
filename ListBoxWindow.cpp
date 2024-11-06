@@ -3,7 +3,7 @@
 #include "ListBoxWindow.h"
 
 // Global variables
-HWND g_hWndListBox;
+static HWND g_hWndListBox;
 
 BOOL IsListBoxWindow( HWND hWnd )
 {
@@ -46,6 +46,13 @@ int ListBoxWindowGetCurrentSelection()
 	return SendMessage( g_hWndListBox, LB_GETCURSEL, ( WPARAM )NULL, ( LPARAM )NULL );
 
 } // End of function ListBoxWindowGetCurrentSelection
+
+int ListBoxWindowGetItemCount()
+{
+	// Get item text
+	return SendMessage( g_hWndListBox, LB_GETCOUNT, ( WPARAM )NULL, ( LPARAM )NULL );
+
+} // End of function ListBoxWindowGetItemCount
 
 int ListBoxWindowGetItemText( int nWhichItem, LPTSTR lpszItemText )
 {
@@ -143,6 +150,23 @@ BOOL ListBoxWindowMove( int nX, int nY, int nWidth, int nHeight, BOOL bRepaint )
 	return MoveWindow( g_hWndListBox, nX, nY, nWidth, nHeight, bRepaint );
 
 } // End of function ListBoxWindowMove
+
+int ListBoxWindowPopulate()
+{
+	int nResult = 0;
+
+	// Add strings to list box window
+	ListBoxWindowAddString( "1234567890" );
+	ListBoxWindowAddString( "qwertyuiop" );
+	ListBoxWindowAddString( "asdfghjkl" );
+	ListBoxWindowAddString( "zxcvbnm" );
+
+	// Update return value
+	nResult = SendMessage( g_hWndListBox, LB_GETCOUNT, ( WPARAM )NULL, ( LPARAM )NULL );
+
+	return nResult;
+
+} // End of function ListBoxWindowPopulate
 
 HWND ListBoxWindowSetFocus()
 {

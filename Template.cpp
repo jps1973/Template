@@ -336,6 +336,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,  LPSTR, int nCmdShow )
 		{
 			// Successfully created main window
 			HMENU hMenuSystem;
+			int nItemCount;
+
+			// Allocate string memory
+			LPTSTR lpszStatusMessage = new char[ STRING_LENGTH ];
 
 			// Get system menu
 			hMenuSystem = GetSystemMenu( hWndMain, FALSE );
@@ -352,11 +356,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,  LPSTR, int nCmdShow )
 			// Update main window
 			UpdateWindow( hWndMain );
 
-			// Add strings to list box window
-			ListBoxWindowAddString( "1234567890" );
-			ListBoxWindowAddString( "qwertyuiop" );
-			ListBoxWindowAddString( "asdfghjkl" );
-			ListBoxWindowAddString( "zxcvbnm" );
+			// Populate list box window
+			nItemCount = ListBoxWindowPopulate();
+
+			// Format status message
+			wsprintf( lpszStatusMessage, LIST_BOX_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING, nItemCount );
+
+			// Show status message on status bar window
+			StatusBarWindowSetText( lpszStatusMessage );
 
 			// Main message loop
 			while( GetMessage( &msg, NULL, 0, 0 ) > 0 )
@@ -368,6 +375,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE,  LPSTR, int nCmdShow )
 				DispatchMessage( &msg );
 
 			}; // End of main message loop
+
+			// Free string memory
+			delete [] lpszStatusMessage;
 
 		} // End of successfully created main window
 		else
