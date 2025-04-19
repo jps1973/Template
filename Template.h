@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <windows.h>
-#include <commctrl.h>
+#include "Ascii.h"
+#include "Common.h"
 
 #include "Resource.h"
 
@@ -41,13 +41,6 @@
 																				"Written by Jim Smith\r\n"			\
 																				"\r\n"								\
 																				"April 2025"
-
-#define STRING_LENGTH															2048
-
-#define ABOUT_MESSAGE_CAPTION													"About"
-#define ERROR_MESSAGE_CAPTION													"Error"
-#define INFORMATION_MESSAGE_CAPTION												"Information"
-#define WARNING_MESSAGE_CAPTION													"Warning"
 
 #define UNABLE_TO_REGISTER_MAIN_WINDOW_CLASS_ERROR_MESSAGE						"Unable to Register Main Window Class"
 #define UNABLE_TO_CREATE_MAIN_WINDOW_ERROR_MESSAGE								"Unable to Create Main Window"
