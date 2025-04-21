@@ -7,6 +7,8 @@
 
 #include "Resource.h"
 
+#include "ListBoxWindow.h"
+
 #define MAIN_WINDOW_CLASS_NAME													"Main Template Window Class"
 
 #define MAIN_WINDOW_CLASS_STYLE													0
