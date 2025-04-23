@@ -8,6 +8,7 @@
 #include "Resource.h"
 
 #include "ListBoxWindow.h"
+#include "StatusBarWindow.h"
 
 #define MAIN_WINDOW_CLASS_NAME													"Main Template Window Class"
 
@@ -25,14 +26,6 @@
 
 #define MAIN_WINDOW_MINIMUM_WIDTH												320
 #define MAIN_WINDOW_MINIMUM_HEIGHT												200
-
-#define LIST_BOX_WINDOW_EXTENDED_STYLE											0
-#define LIST_BOX_WINDOW_STYLE													( WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL | WS_BORDER | LBS_NOINTEGRALHEIGHT | LBS_NOTIFY )
-#define LIST_BOX_WINDOW_TEXT													NULL
-
-#define STATUS_BAR_WINDOW_EXTENDED_STYLE										0
-#define STATUS_BAR_WINDOW_STYLE													( WS_CHILD | WS_VISIBLE | SBARS_SIZEGRIP )
-#define STATUS_BAR_WINDOW_TEXT													NULL
 
 #define SYSTEM_MENU_SEPARATOR_ITEM_POSITION										5
 #define SYSTEM_MENU_ABOUT_ITEM_POSITION											6

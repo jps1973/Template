@@ -126,7 +126,7 @@ BOOL ListBoxWindowHandleCommandMessage( WPARAM wParam, LPARAM, BOOL( *lpStatusFu
 
 } // End of function ListBoxWindowHandleCommandMessage
 
-BOOL ListBoxWindowHandleNotifyMessage( WPARAM wParam, LPARAM lParam, BOOL( *lpStatusFunction )( LPCTSTR lpszItemText ) )
+BOOL ListBoxWindowHandleNotifyMessage( WPARAM, LPARAM lParam, BOOL( *lpStatusFunction )( LPCTSTR lpszItemText ) )
 {
 	BOOL bResult = FALSE;
 

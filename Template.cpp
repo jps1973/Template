@@ -2,16 +2,6 @@
 
 #include "Template.h"
 
-// Global variables
-HWND g_hWndStatusBar;
-
-BOOL StatusBarWindowSetText( LPCTSTR lpszStatusText )
-{
-	// Set status bar window text
-	return SendMessage( g_hWndStatusBar, SB_SETTEXT, ( WPARAM )NULL, ( LPARAM )lpszStatusText );
-
-} // End of function StatusBarWindowSetText
-
 int ShowAboutMessage( HWND hWndParent )
 {
 	int nResult = 0;
@@ -65,15 +55,12 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMsg, WPARAM wParam, L
 				ListBoxWindowSetFont( hFont );
 
 				// Create status bar window
-				g_hWndStatusBar = CreateWindowEx( STATUS_BAR_WINDOW_EXTENDED_STYLE, STATUSCLASSNAME, STATUS_BAR_WINDOW_TEXT, STATUS_BAR_WINDOW_STYLE, 0, 0, 0, 0, hWndMain, ( HMENU )NULL, hInstance, NULL );
-
-				// Ensure that status bar window was created
-				if( g_hWndStatusBar )
+				if( StatusBarWindowCreate( hWndMain, hInstance ) )
 				{
 					// Successfully created status bar window
 
 					// Set status bar window font
-					SendMessage( g_hWndStatusBar, WM_SETFONT, ( WPARAM )hFont, ( LPARAM )TRUE );
+					StatusBarWindowSetFont( hFont );
 
 				} // End of successfully created status bar window
 
@@ -97,10 +84,10 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMsg, WPARAM wParam, L
 			nClientHeight	= ( int )HIWORD( lParam );
 
 			// Size status bar window
-			SendMessage( g_hWndStatusBar, WM_SIZE, ( WPARAM )NULL, ( LPARAM )NULL );
+			StatusBarWindowSize();
 
 			// Get status window size
-			GetWindowRect( g_hWndStatusBar, &rcStatus );
+			StatusBarWindowGetRect( &rcStatus );
 
 			// Calculate window sizes
 			nStatusWindowHeight		= ( rcStatus.bottom - rcStatus.top );
