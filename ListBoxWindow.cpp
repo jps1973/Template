@@ -7,7 +7,7 @@ static HWND g_hWndListBox;
 
 BOOL IsListBoxWindow( HWND hWnd )
 {
-	// See if supplied window is template window
+	// See if supplied window is list box window
 	return( hWnd == g_hWndListBox );
 
 } // End of function IsListBoxWindow
@@ -23,25 +23,25 @@ BOOL ListBoxWindowCreate( HWND hWndParent, HINSTANCE hInstance )
 {
 	BOOL bResult = FALSE;
 
-	// Create template window
+	// Create list box window
 	g_hWndListBox = CreateWindowEx( LIST_BOX_WINDOW_EXTENDED_STYLE, LIST_BOX_WINDOW_CLASS_NAME, LIST_BOX_WINDOW_TEXT, LIST_BOX_WINDOW_STYLE, 0, 0, 0, 0, hWndParent, ( HMENU )NULL, hInstance, NULL );
 
-	// Ensure that template window was created
+	// Ensure that list box window was created
 	if( g_hWndListBox )
 	{
-		// Successfully created template window
+		// Successfully created list box window
 
 		// Update return value
 		bResult = TRUE;
 
-	} // End of successfully created template window
+	} // End of successfully created list box window
 	return bResult;
 
 } // End of function ListBoxWindowCreate
 
 BOOL ListBoxWindowGetRect( LPRECT lpRect )
 {
-	// Get template window rect
+	// Get list box window rect
 	return GetWindowRect( g_hWndListBox, lpRect );
 
 } // End of function ListBoxWindowGetRect
@@ -50,7 +50,7 @@ BOOL ListBoxWindowHandleCommandMessage( WPARAM wParam, LPARAM, BOOL( *lpStatusFu
 {
 	BOOL bResult = FALSE;
 
-	// Select template window notification code
+	// Select list box window notification code
 	switch( HIWORD( wParam ) )
 	{
 		case LBN_DBLCLK:
@@ -120,7 +120,7 @@ BOOL ListBoxWindowHandleCommandMessage( WPARAM wParam, LPARAM, BOOL( *lpStatusFu
 
 		} // End of default notification code
 
-	}; // End of selection for template window notification code
+	}; // End of selection for list box window notification code
 
 	return bResult;
 
@@ -135,7 +135,7 @@ BOOL ListBoxWindowHandleNotifyMessage( WPARAM, LPARAM lParam, BOOL( *lpStatusFun
 	// Get notify message handler
 	lpNmhdr = ( ( LPNMHDR )lParam );
 
-	// Select template window notification code
+	// Select list box window notification code
 	switch( lpNmhdr->code )
 	{
 		default:
@@ -149,7 +149,7 @@ BOOL ListBoxWindowHandleNotifyMessage( WPARAM, LPARAM lParam, BOOL( *lpStatusFun
 
 		} // End of default notification code
 
-	}; // End of selection for template window notification code
+	}; // End of selection for list box window notification code
 
 	return bResult;
 
@@ -157,21 +157,21 @@ BOOL ListBoxWindowHandleNotifyMessage( WPARAM, LPARAM lParam, BOOL( *lpStatusFun
 
 BOOL ListBoxWindowMove( int nX, int nY, int nWidth, int nHeight, BOOL bRepaint )
 {
-	// Move template window
+	// Move list box window
 	return MoveWindow( g_hWndListBox, nX, nY, nWidth, nHeight, bRepaint );
 
 } // End of function ListBoxWindowMove
 
 HWND ListBoxWindowSetFocus()
 {
-	// Focus on template window
+	// Focus on list box window
 	return SetFocus( g_hWndListBox );
 
 } // End of function ListBoxWindowSetFocus
 
 void ListBoxWindowSetFont( HFONT hFont )
 {
-	// Set template window font
+	// Set list box window font
 	SendMessage( g_hWndListBox, WM_SETFONT, ( WPARAM )hFont, ( LPARAM )TRUE );
 
 } // End of function ListBoxWindowSetFont
