@@ -136,7 +136,7 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMsg, WPARAM wParam, L
 			UINT uFileSize;
 
 			// Allocate string memory
-			LPTSTR lpszFilePath = new char[ STRING_LENGTH ];
+			LPTSTR lpszFilePath = new char[ STRING_LENGTH + sizeof( char ) ];
 
 			// Get drop handle
 			hDrop = ( HDROP )wParam;
@@ -436,7 +436,7 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 				int nWideArgumentLength;
 
 				// Allocate string memory
-				LPTSTR lpszArgument = new char[ STRING_LENGTH ];
+				LPTSTR lpszArgument = new char[ STRING_LENGTH + sizeof( char ) ];
 
 				// Loop through arguments
 				for( nWhichArgument = 1; nWhichArgument < nArgumentCount; nWhichArgument ++ )

@@ -59,7 +59,7 @@ BOOL ListBoxWindowHandleCommandMessage( WPARAM wParam, LPARAM, BOOL( *lpStatusFu
 			int nSelectedItem;
 
 			// Allocate string memory
-			LPTSTR lpszSelected = new char[ STRING_LENGTH ];
+			LPTSTR lpszSelected = new char[ STRING_LENGTH + sizeof( char ) ];
 
 			// Get selected item
 			nSelectedItem = SendMessage( g_hWndListBox, LB_GETCURSEL, ( WPARAM )NULL, ( LPARAM )NULL );
@@ -87,7 +87,7 @@ BOOL ListBoxWindowHandleCommandMessage( WPARAM wParam, LPARAM, BOOL( *lpStatusFu
 			int nSelectedItem;
 
 			// Allocate string memory
-			LPTSTR lpszSelected = new char[ STRING_LENGTH ];
+			LPTSTR lpszSelected = new char[ STRING_LENGTH + sizeof( char ) ];
 
 			// Get selected item
 			nSelectedItem = SendMessage( g_hWndListBox, LB_GETCURSEL, ( WPARAM )NULL, ( LPARAM )NULL );
