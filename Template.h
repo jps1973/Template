@@ -31,6 +31,8 @@
 #define SYSTEM_MENU_ABOUT_ITEM_POSITION											6
 #define SYSTEM_MENU_ABOUT_ITEM_TEXT												"About"
 
+#define TEMPLATE_FILE_NAME														"Template.txt"
+
 #define ABOUT_MESSAGE_TEXT														"Template\r\n"						\
 																				"\r\n"								\
 																				"Written by Jim Smith\r\n"			\

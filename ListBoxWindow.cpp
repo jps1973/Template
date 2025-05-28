@@ -162,6 +162,175 @@ BOOL ListBoxWindowMove( int nX, int nY, int nWidth, int nHeight, BOOL bRepaint )
 
 } // End of function ListBoxWindowMove
 
+int ListBoxWindowLoad( LPCTSTR lpszFileName )
+{
+	int nResult = 0;
+
+	HANDLE hFile;
+
+	// Open file
+	hFile = CreateFile( lpszFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL );
+
+	// Ensure that file was opened
+	if( hFile != INVALID_HANDLE_VALUE )
+	{
+		// Successfully opened file
+		DWORD dwFileSize;
+
+		// Get file size
+		dwFileSize = GetFileSize( hFile, NULL );
+
+		// Ensure that file size was got
+		if( dwFileSize != INVALID_FILE_SIZE )
+		{
+			// Successfully got file size
+
+			// Allocate string memory
+			LPTSTR lpszFileText = new char[ dwFileSize + sizeof( char ) ];
+
+			// Read file text
+			if( ReadFile( hFile, lpszFileText, dwFileSize, NULL, NULL ) )
+			{
+				// Successfully read file text
+				LPTSTR lpszLine;
+
+				// Terminate file text
+				lpszFileText[ dwFileSize ] = ( char )NULL;
+
+				// Get first line in file text
+				lpszLine = strtok( lpszFileText, NEW_LINE_TEXT );
+
+				// Loop through all lines in file text
+				while( lpszLine )
+				{
+					// Add line to list box window
+					if( SendMessage( g_hWndListBox, LB_ADDSTRING, ( WPARAM )NULL, ( LPARAM )lpszLine ) >= 0 )
+					{
+						// Successfully added line to list box window
+
+						// Update return value
+						nResult ++;
+
+						// Get next line in file text
+						lpszLine = strtok( NULL, NEW_LINE_TEXT );
+
+					} // End of successfully added line to list box window
+					else
+					{
+						// Unable to add line to list box window
+
+						// Force exit from loop
+						lpszLine = NULL;
+
+					} // End of unable to add line to list box window
+
+				}; // End of loop through all lines in file text
+
+			} // End of successfully read file text
+
+			// Free string memory
+			delete [] lpszFileText;
+
+		} // End of successfully got file size
+
+		// Close file
+		CloseHandle( hFile );
+
+	} // End of successfully opened file
+
+	return nResult;
+
+} // End of function ListBoxWindowLoad
+
+int ListBoxWindowPopulate( LPCTSTR lpszFileName )
+{
+	int nResult = 0;
+
+	// Clear list box window
+	SendMessage( g_hWndListBox, LB_RESETCONTENT, ( WPARAM )NULL, ( LPARAM )NULL );
+
+	// Load file
+	nResult = ListBoxWindowLoad( lpszFileName );
+
+	return nResult;
+
+} // End of function ListBoxWindowPopulate
+
+int ListBoxWindowSave( LPCTSTR lpszFileName )
+{
+	int nResult = 0;
+
+	HANDLE hFile;
+
+	// Create file
+	hFile = CreateFile( lpszFileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL );
+
+	// Ensure that file was created
+	if( hFile != INVALID_HANDLE_VALUE )
+	{
+		// Successfully created file
+		int nItemCount;
+		int nWhichItem;
+
+		// Allocate string memory
+		LPTSTR lpszItemText = new char[ STRING_LENGTH + sizeof( char ) ];
+
+		// Count items on list box window
+		nItemCount = SendMessage( g_hWndListBox, LB_GETCOUNT, ( WPARAM )NULL, ( LPARAM )NULL );
+
+		// Loop through items on list box window
+		for( nWhichItem = 0; nWhichItem < nItemCount; nWhichItem ++ )
+		{
+			// Get item text
+			if( SendMessage( g_hWndListBox, LB_GETTEXT, ( WPARAM )nWhichItem, ( LPARAM )lpszItemText) != LB_ERR )
+			{
+				// Successfully got item text
+
+				// Write item text to file
+				if( WriteFile( hFile, lpszItemText, lstrlen( lpszItemText ), NULL, NULL ) )
+				{
+					// Successfully wrote item text to file
+
+					// Write new line text to file
+					WriteFile( hFile, NEW_LINE_TEXT, lstrlen( NEW_LINE_TEXT ), NULL, NULL );
+
+					// Update return value
+					nResult ++;
+
+				} // End of successfully wrote item text to file
+				else
+				{
+					// Unable to write item text to file
+
+					// Force exit from loop
+					nWhichItem = nItemCount;
+
+				} // End of unable to write item text to file
+
+			} // End of successfully got item text
+			else
+			{
+				// Unable to get item text
+
+				// Force exit from loop
+				nWhichItem = nItemCount;
+
+			} // End of unable to get item text
+
+		}; // End of loop through items on list box window
+
+		// Free string memory
+		delete [] lpszItemText;
+
+		// Close file
+		CloseHandle( hFile );
+
+	} // End of successfully created file
+
+	return nResult;
+
+} // End of function ListBoxWindowSave
+
 HWND ListBoxWindowSetFocus()
 {
 	// Focus on list box window

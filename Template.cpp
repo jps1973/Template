@@ -338,8 +338,30 @@ LRESULT CALLBACK MainWindowProcedure( HWND hWndMain, UINT uMsg, WPARAM wParam, L
 		{
 			// A close message
 
-			// Destroy main window
-			DestroyWindow( hWndMain );
+			// Save file
+			if( ListBoxWindowSave( TEMPLATE_FILE_NAME ) )
+			{
+				// Successfully saved file
+
+				// Destroy main window
+				DestroyWindow( hWndMain );
+
+			} // End of successfully saved file
+			else
+			{
+				// Unable to save file
+
+				// Ensure that user is ok to close
+				if( MessageBox( hWndMain, LIST_BOX_WINDOW_UNABLE_TO_SAVE_WARNING_MESSAGE, WARNING_MESSAGE_CAPTION, ( MB_YESNO | MB_DEFBUTTON2 | MB_ICONWARNING ) ) == IDYES )
+				{
+					// User is ok to close
+
+					// Destroy main window
+					DestroyWindow( hWndMain );
+
+				} // End of user is ok to close
+
+			} // End of unable to save file
 
 			// Break out of switch
 			break;
@@ -414,6 +436,10 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 			HMENU hMenuSystem;
 			LPWSTR *lpszArgumentList;
 			int nArgumentCount;
+			int nItemCount;
+
+			// Allocate string memory
+			LPTSTR lpszStatusMessage = new char[ STRING_LENGTH + sizeof( char ) ];
 
 			// Get system menu
 			hMenuSystem = GetSystemMenu( hWndMain, FALSE );
@@ -469,6 +495,15 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 			// Update main window
 			UpdateWindow( hWndMain );
 
+			// Populate list box window
+			nItemCount = ListBoxWindowPopulate( TEMPLATE_FILE_NAME );
+
+			// Format status message
+			wsprintf( lpszStatusMessage, LIST_BOX_WINDOW_POPULATE_STATUS_MESSAGE_FORMAT_STRING, TEMPLATE_FILE_NAME, nItemCount );
+
+			// Show status message on status bar window
+			StatusBarWindowSetText( lpszStatusMessage );
+
 			// Message loop
 			while( GetMessage( &msg, NULL, 0, 0 ) > 0 )
 			{
@@ -479,6 +514,9 @@ int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow )
 				DispatchMessage( &msg );
 
 			}; // End of message loop
+
+			// Free string memory
+			delete [] lpszStatusMessage;
 
 		} // End of successfully main created window
 		else
