@@ -14,7 +14,7 @@ int ShowAboutMessage( HWND hWndParent )
 	// Initialise message box parameter structure
 	mbp.cbSize		= sizeof( MSGBOXPARAMS );
 	mbp.hwndOwner	= hWndParent;
-	mbp.hInstance	= GetModuleHandle( NULL );
+	mbp.hInstance	= NULL; // Note that this must be null to use standard icons
 	mbp.lpszText	= ABOUT_MESSAGE_TEXT;
 	mbp.lpszCaption	= ABOUT_MESSAGE_CAPTION;
 	mbp.dwStyle		= ( MB_OK | MB_USERICON );
